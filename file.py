@@ -1,5 +1,8 @@
-def greeter(func):
-    pass
+def greeter(greet_person):
+    def wrapper(*args):
+        val = "Aloha "+greet_person(*args).lower().title()
+        return val
+    return wrapper
 
 
 def sums_of_str_elements_are_equal(func):
