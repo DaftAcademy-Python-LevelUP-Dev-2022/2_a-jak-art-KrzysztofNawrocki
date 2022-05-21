@@ -29,11 +29,14 @@ def sums_of_str_elements_are_equal(condition):
     return wrapper
 
 
+from itertools import chain
+
+
 def format_output(*required_args):
     def decorator(func):
         def wrapper(*args):
             args_list = [arg.split("__") for arg in required_args]
-            input_dict = func(*args)
+            input_dict = func(args)
 
             if not all(key in input_dict.keys() for key in chain(*args_list)):
                 raise ValueError
@@ -41,11 +44,19 @@ def format_output(*required_args):
             output = {}
             for index, arg in enumerate(args_list):
                 if len(arg)==1:
-                    output[required_args[index]] = input_dict[arg[0]]
+                    if input_dict[arg[0]] == "":
+                        output[required_args[index]] = "Empty value"
+                    else:    
+                        output[required_args[index]] = input_dict[arg[0]]
 
-                if len(arg)==2:
+                elif len(arg)==2:
                     value_combined = input_dict[arg[0]] + " " + input_dict[arg[1]]
                     output[required_args[index]] = value_combined
+                
+                elif len(arg)==3:
+                    value_combined = input_dict[arg[0]] + " " + input_dict[arg[1]] + " " + input_dict[arg[2]]
+                    output[required_args[index]] = value_combined
+                
 
             return output
         return wrapper
